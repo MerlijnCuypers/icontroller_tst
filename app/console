@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * console file to init command file(s)
+ *
+ * @author Merlijn Cuypers <merlijn.cuypers@gmail.com> *
+ */
+
+require __DIR__.'/../vendor/autoload.php';
+
+use Mikko\Command\GetPayDatesFileCommand;
+use Symfony\Component\Console\Application;
+
+$application = new Application();
+$application->add(new GetPayDatesFileCommand());
+$application->run();
+

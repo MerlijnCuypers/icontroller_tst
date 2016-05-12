@@ -1,0 +1,19 @@
+{
+    "name": "merlijn/mikko-test",
+    "description": "Mikko tst 4 iController",
+    "authors": [
+        {
+            "name": "Merlijn Cuypers",
+            "email": "merlijn.cuypers@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    },
+    "require": {
+        "symfony/monolog-bundle": "~2.4",
+        "symfony/console": "3.0.6"
+    }
+}
