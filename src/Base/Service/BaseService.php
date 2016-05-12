@@ -2,6 +2,8 @@
 
 namespace Base\Service;
 
+use Monolog\Logger;
+use Doctrine\Common\Cache\FilesystemCache;
 /**
  * abstract Base Service for inharitance and PHP Magic
  *
@@ -9,6 +11,24 @@ namespace Base\Service;
  */
 abstract class BaseService
 {
+
+    /**
+     * ServiceFactory from base
+     * @var Base\Service\ServiceFactory
+     */
+    protected $serviceFactory;
+
+    /**
+     *
+     * @var MemcachedCache
+     */
+    protected $cache;
+
+    /**
+     *
+     * @var Logger
+     */
+    protected $log;
 
     /**
      * PHP Magic
@@ -31,7 +51,7 @@ abstract class BaseService
             case property_exists($this, $name):
                 return $this->$name;
             default:
-                throw new \Exception($name . ' does not exist in ' . get_class($this));
+                throw new \Exception('Fail to get "'. $name . '", it does not exist in ' . get_class($this));
         }
     }
 
@@ -54,8 +74,30 @@ abstract class BaseService
             case property_exists($this, $name):
                 $this->$name = $value;
             default:
-                throw new \Exception($name . ' does not exist in ' . get_class($this));
+                throw new \Exception('Fail to set "'. $name . '", it does not exist in ' . get_class($this));
         }
+    }
+
+    /**
+     * EXEPTION to confirm the rule:
+     * ServiceFactory is a special one :-s
+     *
+     * @param \Base\Service\Base\Service\ServiceFactory $serviceFactory
+     */
+    public function setServiceFactory(ServiceFactory $serviceFactory){
+        $this->serviceFactory = $serviceFactory;
+        $this->cache = $serviceFactory->getCache();
+        $this->log = $serviceFactory->getLog();
+    }
+
+    /**
+     * get other Service from factory
+     *
+     * @param type $serviceClassName
+     * @return Service
+     */
+    protected function callService($serviceClassName){
+        return $this->serviceFactory->getService($serviceClassName);
     }
 
 }

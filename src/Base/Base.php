@@ -5,6 +5,8 @@ namespace Base;
 use Base\Service\ServiceFactory;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Doctrine\Common\Cache\FilesystemCache;
+use Doctrine\Common\Cache\MemcachedCache;
 
 /**
  * kernel type of class
@@ -23,6 +25,12 @@ class Base
 
     /**
      *
+     * @var MemcachedCache
+     */
+    public $cache;
+
+    /**
+     *
      * @var Logger
      */
     public $log;
@@ -30,7 +38,15 @@ class Base
     public function __construct()
     {
         $this->initLogger();
-        $this->serviceFactory = new ServiceFactory;
+        $this->initCache();
+        $this->serviceFactory = new ServiceFactory();
+        $this->serviceFactory->setLog($this->log);
+        $this->serviceFactory->setCache($this->cache);
+    }
+
+    private function initCache()
+    {
+        $this->cache = new FilesystemCache(__DIR__ . '/../../app/cache/', '.cache.data');
     }
 
     /**
@@ -41,7 +57,7 @@ class Base
     {
         $this->log = new Logger('base');
         // todo: would be nicer to set log path based on yml config file...
-        $this->log->pushHandler(new StreamHandler(__DIR__ . '/../../../app/logs/base.log', Logger::INFO));
+        $this->log->pushHandler(new StreamHandler(__DIR__ . '/../../app/logs/base.log', Logger::INFO));
     }
 
     /**

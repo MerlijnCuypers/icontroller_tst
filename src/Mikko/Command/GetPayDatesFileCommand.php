@@ -61,9 +61,9 @@ class GetPayDatesFileCommand extends Command
         try {
             $paymentDates = $base->getController("Mikko\PaymentDates\Controller\PaymentDatesController");
             $fileName = $paymentDates->createCSVForYear($this->input->getArgument('year'));
-            $this->io->success('The CSV file was created as ' . $fileName);
+            $this->io->success('The CSV file was created and can be found at docs/' . $fileName);
         } catch (\Exception $ex) {
-            $base->error($ex->getMessage());
+            $base->log->error($ex->getMessage());
             throw $ex;
         }
     }
